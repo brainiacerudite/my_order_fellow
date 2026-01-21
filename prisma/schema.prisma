@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --------------------------------------
+// ENUMS
+// --------------------------------------
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OrderStatus {
+  PENDING
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum NotificationStatus {
+  SENT
+  FAILED
+}
+
+enum NotificationTrigger {
+  TRACKING_ACTIVATED
+  STATUS_UPDATE
+}
+
+// --------------------------------------
+// MODELS
+// --------------------------------------
+
+model Admin {
+  id       String  @id @default(uuid())
+  name     String?
+  email    String  @unique
+  password String
+  role     Role    @default(ADMIN)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  reviewedKyc KycDocument[]
+
+  @@map("admins")
+}
+
+model Company {
+  id              String    @id @default(uuid())
+  businessName    String    @map("business_name")
+  email           String    @unique
+  password        String    @map("password")
+  // OTP & Security
+  otpHash         String?   @map("otp_hash")
+  otpExpiresAt    DateTime? @map("otp_expires_at")
+  isEmailVerified Boolean   @default(false) @map("is_email_verified")
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  // API Security
+  webhookSecret   String?   @map("webhook_secret")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  kycDocuments KycDocument[]
+  orders       Order[]
+
+  @@map("companies")
+}
+
+model KycDocument {
+  id                 String    @id @default(uuid())
+  companyId          String    @map("company_id")
+  registrationNumber String    @map("registration_number")
+  businessAddress    String    @map("business_address")
+  contactDetails     Json      @map("contact_person_details")
+  // Approval Workflow
+  status             KycStatus @default(PENDING)
+  rejectionReason    String?   @map("rejection_reason")
+  reviewedBy         String?   @map("reviewed_by")
+  reviewedAt         DateTime? @map("reviewed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  company  Company @relation(fields: [companyId], references: [id])
+  reviewer Admin?  @relation(fields: [reviewedBy], references: [id])
+
+  @@map("kyc_documents")
+}
+
+model Order {
+  id                   String      @id @default(uuid())
+  companyId            String      @map("company_id")
+  externalOrderId      String      @map("external_order_id")
+  customerEmail        String      @map("customer_email")
+  customerPhone        String?     @map("customer_phone")
+  deliveryAddress      String      @map("delivery_address")
+  itemSummary          Json        @map("item_summary")
+  currentStatus        OrderStatus @default(PENDING) @map("current_status")
+  // Logic Flags
+  isSubscriptionActive Boolean     @default(true) @map("tracking_subscription_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  company         Company                @relation(fields: [companyId], references: [id])
+  trackingHistory OrderTrackingHistory[]
+  notifications   NotificationLog[]
+
+  // COMPOSITE UNIQUE INDEX: Prevents duplicate orders for the same company
+  @@unique([companyId, externalOrderId])
+  @@map("orders")
+}
+
+model OrderTrackingHistory {
+  id             String      @id @default(uuid())
+  orderId        String      @map("order_id")
+  status         OrderStatus
+  additionalNote String?     @map("additional_note")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("order_tracking_history")
+}
+
+model NotificationLog {
+  id                 String             @id @default(uuid())
+  orderId            String             @map("order_id")
+  recipientEmail     String             @map("recipient_email")
+  triggerEvent       String             @map("trigger_event")
+  status             NotificationStatus
+  providerResponseId String?            @map("provider_response_id") // e.g. SendGrid ID
+  sentAt             DateTime           @default(now()) @map("sent_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("notification_logs")
+}
