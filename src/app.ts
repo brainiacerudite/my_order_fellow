@@ -16,7 +16,10 @@ const app = express()
 // middlewares
 app.use(helmet())
 app.use(hpp())
-app.use(cors())
+app.use(cors({
+    origin: config.server.corsOrigins,
+    credentials: true
+}))
 app.use(limiter)
 app.use(compression())
 app.use(morgan("combined", {
