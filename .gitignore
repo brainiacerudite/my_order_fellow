@@ -4,3 +4,4 @@ dist
 logs
 /src/generated/prisma
 /src/generated
+/restClient
