@@ -10,6 +10,7 @@ import { ApiResponse } from './shared/types'
 import { notFoundHandler } from './shared/middlewares/notFoundHandler'
 import { errorHandler } from './shared/middlewares/errorHandler'
 import config from './config'
+import { authRoutes } from './modules/auth/auth.routes'
 
 const app = express()
 
@@ -46,6 +47,7 @@ app.get(`${config.api.prefix}/health`, (_req, res) => {
     res.status(200).json(apiResponse);
 });
 // register modules routes
+app.use(`${config.api.prefix}/auth`, authRoutes);
 
 // error handlers
 app.use(notFoundHandler)
