@@ -1,3 +1,9 @@
+export interface AuthPayload {
+    userId: string;
+    role?: string; // Optional, useful for Admins
+    type: 'company' | 'admin' | 'password_reset';
+}
+
 // API Response interfaces
 export interface ApiResponse<T = any> {
     success: boolean;

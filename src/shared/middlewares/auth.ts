@@ -26,6 +26,15 @@ export const authenticate = (authType: AuthType = 'company') => {
             if (authType === 'company') {
                 const company = await prisma.company.findUnique({
                     where: { id: decoded.userId },
+                    select: {
+                        id: true,
+                        businessName: true,
+                        email: true,
+                        isEmailVerified: true,
+                        emailVerifiedAt: true,
+                        createdAt: true,
+                        updatedAt: true,
+                    }
                 });
 
                 if (!company) {
@@ -58,6 +67,28 @@ export const authenticate = (authType: AuthType = 'company') => {
                 next(error);
             }
         }
+    }
+}
+
+export const passwordResetToken = (req: Request, _res: Response, next: NextFunction) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            throw createError('Reset toeken required.', 401);
+        }
+
+        // verify token
+        const token = authHeader.split(' ')[1];
+        const decoded = verifyToken(token);
+
+        if (decoded.type !== 'password_reset') {
+            throw createError('Invalid token type for this resource. Expected password_reset token.', 403);
+        }
+
+        // attach to req
+        req.authPayload = decoded;
+    } catch (error) {
+        return next(createError('Invalid or expired reset token.', 401));
     }
 }
 

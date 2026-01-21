@@ -1,12 +1,7 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '../../config';
 import bcrypt from 'bcrypt';
-
-export interface AuthPayload {
-    userId: string;
-    role?: string; // Optional, useful for Admins
-    type: 'company' | 'admin';
-}
+import { AuthPayload } from '../types';
 
 export const signAccessToken = (payload: AuthPayload): string => {
     return jwt.sign(payload, config.jwt.secret, {
