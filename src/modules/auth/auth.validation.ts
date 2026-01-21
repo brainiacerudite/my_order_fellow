@@ -1,30 +1,24 @@
 import { z } from 'zod';
 
 export const registerCompanySchema = z.object({
-    body: z.object({
-        businessName: z.string().min(2, "Business name is required"),
-        email: z.email("Invalid email format"),
-        password: z.string()
-            .min(8, "Password must be at least 8 characters")
-            .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-            .regex(/[0-9]/, "Password must contain at least one number"),
-    }),
+    businessName: z.string().min(2, "Business name is required"),
+    email: z.email("Invalid email format"),
+    password: z.string()
+        .min(8, "Password must be at least 8 characters")
+        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+        .regex(/[0-9]/, "Password must contain at least one number"),
 });
 
 export const loginCompanySchema = z.object({
-    body: z.object({
-        email: z.email("Invalid email format"),
-        password: z.string().min(1, "Password is required"),
-    }),
+    email: z.email("Invalid email format"),
+    password: z.string().min(1, "Password is required"),
 });
 
 export const verifyOtpSchema = z.object({
-    body: z.object({
-        email: z.email("Invalid email format"),
-        otp: z.string().length(6, "OTP must be exactly 6 digits"),
-    }),
+    email: z.email("Invalid email format"),
+    otp: z.string().length(6, "OTP must be exactly 6 digits"),
 });
 
-export type RegisterCompanyInput = z.infer<typeof registerCompanySchema>['body'];
-export type LoginCompanyInput = z.infer<typeof loginCompanySchema>['body'];
-export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>['body'];
+export type RegisterCompanyInput = z.infer<typeof registerCompanySchema>;
+export type LoginCompanyInput = z.infer<typeof loginCompanySchema>;
+export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;

@@ -15,7 +15,10 @@ const registerCompany = asyncHandler(async (req: Request, res: Response) => {
     res.status(201).json(response);
 });
 
-const loginCompany = asyncHandler(async (_req: Request, res: Response) => {
+const loginCompany = asyncHandler(async (req: Request, res: Response) => {
+
+    console.log(req.body)
+
     // Login logic here
     const response: ApiResponse = {
         success: true,
