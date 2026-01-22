@@ -49,7 +49,7 @@ app.get(`${config.api.prefix}/health`, (_req, res) => {
 });
 // register modules routes
 app.use(`${config.api.prefix}/auth`, authRoutes);
-app.use(`${config.api.prefix}/company`, companyRoutes);
+app.use(`${config.api.prefix}/companies`, companyRoutes);
 
 // error handlers
 app.use(notFoundHandler)
