@@ -11,6 +11,7 @@ import { notFoundHandler } from './shared/middlewares/notFoundHandler'
 import { errorHandler } from './shared/middlewares/errorHandler'
 import config from './config'
 import { authRoutes } from './modules/auth/auth.routes'
+import { companyRoutes } from './modules/company/company.routes'
 
 const app = express()
 
@@ -48,6 +49,7 @@ app.get(`${config.api.prefix}/health`, (_req, res) => {
 });
 // register modules routes
 app.use(`${config.api.prefix}/auth`, authRoutes);
+app.use(`${config.api.prefix}/company`, companyRoutes);
 
 // error handlers
 app.use(notFoundHandler)
