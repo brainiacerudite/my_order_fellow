@@ -13,6 +13,7 @@ import config from './config'
 import { authRoutes } from './modules/auth/auth.routes'
 import { companyRoutes } from './modules/company/company.routes'
 import { orderRoutes } from './modules/order/order.routes'
+import { notificationRoutes } from './modules/notification/notification.routes'
 
 const app = express()
 
@@ -52,6 +53,7 @@ app.get(`${config.api.prefix}/health`, (_req, res) => {
 app.use(`${config.api.prefix}/auth`, authRoutes);
 app.use(`${config.api.prefix}/companies`, companyRoutes);
 app.use(`${config.api.prefix}/orders`, orderRoutes);
+app.use(`${config.api.prefix}/notifications`, notificationRoutes);
 
 // error handlers
 app.use(notFoundHandler)

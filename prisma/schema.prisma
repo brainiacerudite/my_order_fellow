@@ -152,7 +152,7 @@ model OrderTrackingHistory {
 
 model NotificationLog {
   id                 String             @id @default(uuid())
-  orderId            String             @map("order_id")
+  orderId            String?            @map("order_id")
   recipientEmail     String             @map("recipient_email")
   triggerEvent       String             @map("trigger_event")
   status             NotificationStatus
@@ -163,7 +163,7 @@ model NotificationLog {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  order Order @relation(fields: [orderId], references: [id])
+  order Order? @relation(fields: [orderId], references: [id])
 
   @@map("notification_logs")
 }
