@@ -129,6 +129,48 @@ export class OrderService {
 
         return order
     }
+
+    async trackOrder(externalOrderIdOrId: string) {
+        // find order by id or externalOrderId
+        const order = await prisma.order.findFirst({
+            where: {
+                OR: [
+                    { id: externalOrderIdOrId },
+                    { externalOrderId: externalOrderIdOrId },
+                ]
+            },
+            select: {
+                id: true,
+                externalOrderId: true,
+                currentStatus: true,
+                deliveryAddress: true,
+                itemSummary: true,
+                createdAt: true,
+                updatedAt: true,
+                company: {
+                    select: {
+                        businessName: true,
+                    }
+                },
+                trackingHistory: {
+                    select: {
+                        status: true,
+                        additionalNote: true,
+                        createdAt: true,
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                }
+            }
+        });
+
+        if (!order) {
+            throw createError('Order not found', 404);
+        }
+
+        return order;
+    }
 }
 
 export const orderService = new OrderService();

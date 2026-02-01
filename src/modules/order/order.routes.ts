@@ -13,4 +13,7 @@ router.post("/", validate(createOrderSchema), orderController.createOrder)
 router.patch("/:id/status", validateObjectId('id'), validate(updateStatusSchema), orderController.updateOrderStatus)
 router.get("/:id", validateObjectId('id'), orderController.getOrderDetails)
 
+// tracking
+router.get("/track/:trackingId", orderController.getTrackingDetails)
+
 export const orderRoutes = router;
