@@ -1,12 +1,14 @@
 import { NotificationStatus } from "@prisma/client"
 import { sendEmail } from "../../shared/utils/email"
 import { prisma } from "../../shared/database/prisma"
+import { EmailTemplate, renderTemplate } from "../../shared/utils/template"
 
 interface SendNotificationInput {
     recipientEmail: string
     subject: string
-    message: string
     triggerEvent: string
+    template: EmailTemplate,
+    data: Record<string, any>,
     orderId?: string
 }
 
@@ -24,13 +26,19 @@ export class NotificationService {
         let providerId = null
 
         try {
+            // render the html
+            const htmlContent = await renderTemplate(input.template, input.data)
+
             // attempt to send
             await sendEmail({
                 to: input.recipientEmail,
                 subject: input.subject,
-                html: input.message,
+                html: htmlContent,
                 category: input.triggerEvent,
             })
+
+            providerId = `smtp-${Date.now()}`
+
         } catch (error) {
             status = NotificationStatus.FAILED
             console.error("Failed to send notification:", error)

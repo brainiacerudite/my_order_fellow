@@ -9,6 +9,7 @@ const envSchema = z.object({
     PORT: z.coerce.number().default(8000),
 
     // API
+    APP_NAME: z.string().default('My Order Fellow'),
     API_URL: z.url().default('http://localhost:8000'),
     API_VERSION: z.string().default('v1'),
 
@@ -66,6 +67,7 @@ export const config = {
 
     // API
     api: {
+        appName: env.data.APP_NAME,
         baseUrl: env.data.API_URL,
         version: env.data.API_VERSION,
         prefix: API_PREFIX,

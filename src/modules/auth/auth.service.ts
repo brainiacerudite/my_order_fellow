@@ -3,6 +3,7 @@ import { prisma } from "../../shared/database/prisma";
 import { createError } from "../../shared/middlewares/errorHandler";
 import { comparePassword, hashPassword, signAccessToken, signRefreshToken, verifyToken } from "../../shared/utils/auth";
 import { generateOtp } from "../../shared/utils/otp";
+import { notificationService } from "../notification/notification.service";
 import { ForgotPasswordInput, LoginCompanyInput, RefreshTokenInput, RegisterCompanyInput, ResendOtpInput, ResetPasswordInput, VerifyOtpInput } from "./auth.validation";
 
 export class AuthService {
@@ -26,8 +27,18 @@ export class AuthService {
         const otpHash = await hashPassword(otp);
         const otpExpiresAt = new Date(Date.now() + 1000 * 60 * config.otp.expiryMinutes);
 
-        // TODO: send the OTP via email here
-        console.log(`OTP for ${email}: ${otp}`);
+        // send the OTP
+        // console.log(`OTP for ${email}: ${otp}`);
+        await notificationService.sendAndLog({
+            recipientEmail: email,
+            subject: "Verify your email",
+            triggerEvent: "AUTH_REGISTER",
+            template: "auth/verify-otp",
+            data: {
+                businessName,
+                otp,
+            }
+        })
 
         // save to db
         const company = await prisma.company.create({
@@ -193,8 +204,18 @@ export class AuthService {
             }
         })
 
-        // TODO: send the OTP via email here
-        console.log(`Resent OTP for ${email}: ${otp}`);
+        // send the OTP
+        // console.log(`Resent OTP for ${email}: ${otp}`);
+        await notificationService.sendAndLog({
+            recipientEmail: email,
+            subject: "Resend: Verify your email",
+            triggerEvent: "AUTH_RESEND_OTP",
+            template: "auth/verify-otp",
+            data: {
+                businessName: company.businessName,
+                otp,
+            }
+        })
 
         return {
             message: 'OTP resent successfully',
@@ -224,8 +245,18 @@ export class AuthService {
             }
         })
 
-        // TODO: send the OTP via email here
-        console.log(`Password reset OTP for ${email}: ${otp}`);
+        // send the OTP
+        // console.log(`Password reset OTP for ${email}: ${otp}`);
+        await notificationService.sendAndLog({
+            recipientEmail: email,
+            subject: "Password Reset OTP",
+            triggerEvent: "AUTH_FORGOT_PASSWORD",
+            template: "auth/reset-password",
+            data: {
+                businessName: company.businessName,
+                otp,
+            }
+        })
 
         return {
             message: 'Password reset OTP has been sent to your email',

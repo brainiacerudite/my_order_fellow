@@ -2,6 +2,8 @@ import { OrderStatus } from "@prisma/client";
 import { prisma } from "../../shared/database/prisma";
 import { createError } from "../../shared/middlewares/errorHandler";
 import { CreateOrderInput, UpdateStatusInput } from "./order.validation";
+import { notificationService } from "../notification/notification.service";
+import config from "../../config";
 
 export class OrderService {
     async createOrder(companyId: string, data: CreateOrderInput) {
@@ -85,6 +87,21 @@ export class OrderService {
 
             return updatedOrder;
         });
+
+        // Send notification to customer about status update
+        await notificationService.sendAndLog({
+            recipientEmail: order.customerEmail,
+            subject: `Update on Order #${order.externalOrderId}: ${data.status}`,
+            triggerEvent: `ORDER_${data.status}`,
+            template: 'order/status-update',
+            data: {
+                externalOrderId: order.externalOrderId,
+                status: data.status,
+                note: data.additionalNote ?? '',
+                trackingUrl: `${config.server.frontendUrl}/track/${order.id}`,
+            },
+            orderId: order.id,
+        })
 
         return {
             success: true,
