@@ -13,6 +13,7 @@ export class CompanyService {
                 email: true,
                 isEmailVerified: true,
                 emailVerifiedAt: true,
+                webhookSecret: true,
                 createdAt: true,
                 updatedAt: true,
                 // include

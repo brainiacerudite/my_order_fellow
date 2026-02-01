@@ -6,7 +6,8 @@ declare global {
         interface Request {
             company?: Omit<Company, 'password' | 'otpHash' | 'otpExpiresAt' | 'webhookSecret'>;
             admin?: Admin;
-            authPayload?: AuthPayload
+            authPayload?: AuthPayload;
+            rawBody?: Buffer;
         }
     }
 }

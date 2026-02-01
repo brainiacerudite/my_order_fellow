@@ -14,6 +14,7 @@ import { authRoutes } from './modules/auth/auth.routes'
 import { companyRoutes } from './modules/company/company.routes'
 import { orderRoutes } from './modules/order/order.routes'
 import { notificationRoutes } from './modules/notification/notification.routes'
+import { webhookRoutes } from './modules/webhook/webhook.routes'
 
 const app = express()
 
@@ -29,6 +30,9 @@ app.use(compression())
 app.use(morgan("combined", {
     stream: { write: (message) => logger.info(message.trim()) }
 }))
+
+// webhook
+app.use(`${config.api.prefix}/webhooks`, webhookRoutes)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
