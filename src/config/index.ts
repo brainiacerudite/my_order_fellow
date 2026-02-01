@@ -33,7 +33,7 @@ const envSchema = z.object({
     // Email Service
     EMAIL_HOST: z.string().default('smtp.example.com'),
     EMAIL_PORT: z.coerce.number().default(587),
-    EMAIL_USERNAME: z.string().default('user@example.com'),
+    EMAIL_USER: z.string().default('user@example.com'),
     EMAIL_PASSWORD: z.string().default('password'),
     EMAIL_FROM_NAME: z.string().default('MyOrderFellow'),
     EMAIL_FROM_ADDRESS: z.email().default('no-reply@example.com'),
@@ -99,7 +99,7 @@ export const config = {
     email: {
         host: env.data.EMAIL_HOST,
         port: env.data.EMAIL_PORT,
-        username: env.data.EMAIL_USERNAME,
+        user: env.data.EMAIL_USER,
         password: env.data.EMAIL_PASSWORD,
         fromName: env.data.EMAIL_FROM_NAME,
         fromAddress: env.data.EMAIL_FROM_ADDRESS,
