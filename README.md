@@ -104,9 +104,22 @@ You should see a success message, and a real email should land in your inbox!
 
 ---
 
+## **Testing**
+
+Run the comprehensive test suite (Unit + Integration).
+
+```bash
+npm test
+```
+
+- **Unit Tests:** `npm run test:unit` (Fast, logic-only)
+- **Integration Tests:** `npm run test:int` (Full API flow with Test DB)
+
+---
+
 ## 📚 API Documentation
 
-You can import the `postman_collection.json` (if included) into Postman.
+You can import the `postman_collection.json` into Postman.
 
 ### Key Endpoints
 
@@ -136,6 +149,7 @@ src/
 │   ├── database/       # Prisma Client
 │   ├── middlewares/    # Auth, Error, RateLimit, WebhookParser
 │   ├── templates/      # EJS Email Templates
+│   ├── types/          # TypeScript types
 │   └── utils/          # Logger, Hashing, WebhookSignature
 └── app.ts              # App Entry Point
 ```
