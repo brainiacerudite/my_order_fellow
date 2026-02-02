@@ -22,7 +22,7 @@ When an order is created or updated on the store's end, My Order Fellow automati
 
 - 🔐 **Secure Authentication**: JWT-based auth with Refresh Tokens and Email OTP verification.
 - 🏢 **Company Onboarding & KYC**: Companies must submit KYC documents. Only Admin-approved companies receive API keys (Webhook Secrets).
-- 🪝 **Event-Driven Webhooks**: Secure webhook listener (HMAC-SHA256 signature verification) that accepts `ORDER_CREATED` and `ORDER_UPDATED` events.
+- 🪝 **Event-Driven Webhooks**: Secure webhook listener (HMAC-SHA256 signature verification) that accepts `order.created` and `order.updated` events.
 - 📧 **Automated Notification Engine**: "Fire-and-forget" email system using EJS Templates (Transactional emails for OTPs, Tracking Updates).
 - 🔍 **Public Tracking API**: Rate-limited public endpoint for end-customers to view their package journey without logging in.
 - 🛡️ **Role-Based Access Control (RBAC)**: Distinct roles for `COMPANY` and `ADMIN` (Separate Admin Portal).
@@ -51,37 +51,20 @@ When an order is created or updated on the store's end, My Order Fellow automati
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/my-order-fellow.git
-cd my-order-fellow
+git clone https://github.com/brainiacerudite/my_order_fellow.git
+cd my_order_fellow
 npm install
 ```
 
 ### 2. Environment Variables
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory. You can copy from the example file:
 
-```ini
-# Server
-PORT=3000
-NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
-
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/order_fellow_db"
-
-# JWT Security
-JWT_SECRET="your-super-secret-key"
-JWT_ACCESS_EXPIRY=15m
-JWT_REFRESH_EXPIRY=7d
-
-# Email (Gmail SMTP)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=465
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password
-EMAIL_FROM_NAME="My Order Fellow"
-EMAIL_FROM_ADDRESS=your-email@gmail.com
+```bash
+cp .env.example .env
 ```
+
+Then update the values in `.env`:
 
 ### 3. Database Setup
 
@@ -106,9 +89,9 @@ npm start
 
 ## 🧪 Testing Webhooks (Simulation)
 
-Since this is an event-driven system, you cannot easily test the "Order Reception" flow with just a browser. We have provided a simulation script to mimic an external e-commerce store sending data to your API.
+Since this is an event-driven system, you cannot easily test the "Order Reception" flow with just a browser. So a simulation script is provided to mimic an external e-commerce store sending data to the API.
 
-1. Register a Company and get your **Webhook Secret** from the dashboard (or DB).
+1. Register a Company and get your **Webhook Secret** from the dashboard.
 2. Open `scripts/simulate-webhook.ts`.
 3. Update the `COMPANY_ID` and `WEBHOOK_SECRET` constants.
 4. Run the simulation:
