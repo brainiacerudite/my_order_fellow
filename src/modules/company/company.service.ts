@@ -1,3 +1,4 @@
+import { KycStatus } from "@prisma/client";
 import { prisma } from "../../shared/database/prisma";
 import { createError } from "../../shared/middlewares/errorHandler";
 import { SubmitKycInput } from "./company.validation";
@@ -45,10 +46,10 @@ export class CompanyService {
 
         if (existingKyc) {
             // check status
-            if (existingKyc.status === 'PENDING') {
+            if (existingKyc.status === KycStatus.PENDING) {
                 throw createError('Your KYC submission is already under review', 409);
             }
-            if (existingKyc.status === 'APPROVED') {
+            if (existingKyc.status === KycStatus.APPROVED) {
                 throw createError('KYC has already been approved', 409);
             }
         }
