@@ -2,6 +2,12 @@ import app from "../../src/app";
 import { prisma } from "../../src/shared/database/prisma";
 import request from "supertest";
 
+jest.mock('../../src/modules/notification/notification.service', () => ({
+    notificationService: {
+        sendAndLog: jest.fn().mockResolvedValue(true),
+    }
+}));
+
 describe('Auth Integration Tests', () => {
     const TEST_COMPANY = {
         businessName: 'Auth Test Company',
