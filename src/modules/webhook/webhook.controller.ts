@@ -5,6 +5,7 @@ import z from 'zod';
 import { orderService } from '../order/order.service';
 import logger from '../../shared/utils/logger';
 import { verifyWebhookSignature } from '../../shared/utils/webhookSignature';
+import { KycStatus } from '@prisma/client';
 
 const handleIncomingWebhook = async (req: Request, res: Response) => {
     try {
@@ -17,11 +18,27 @@ const handleIncomingWebhook = async (req: Request, res: Response) => {
         }
 
         const company = await prisma.company.findUnique({
-            where: { id: companyId }
+            where: { id: companyId },
+            select: {
+                id: true,
+                webhookSecret: true,
+                kycDocuments: {
+                    select: {
+                        status: true,
+                    }
+                },
+                isEmailVerified: true,
+            }
         })
 
         if (!company || !company.webhookSecret) {
             return res.status(401).json({ message: 'Invalid credentials or KYC pending' });
+        }
+
+        // check KYC and email verification
+        const hasApprovedKYC = company.kycDocuments.some(doc => doc.status === KycStatus.APPROVED);
+        if (!hasApprovedKYC || !company.isEmailVerified) {
+            return res.status(403).json({ message: 'Company KYC not approved or email not verified' });
         }
 
         // verify signature
@@ -39,7 +56,7 @@ const handleIncomingWebhook = async (req: Request, res: Response) => {
         // process events
         if (event_type === 'order.created') {
             // handle order created
-            orderService.createOrder(company.id, {
+            await orderService.createOrder(company.id, {
                 externalOrderId: data.external_order_id,
                 customerEmail: data.customer_email,
                 customerPhone: data.customer_phonse,
