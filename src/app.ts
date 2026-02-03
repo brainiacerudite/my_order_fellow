@@ -15,6 +15,7 @@ import { companyRoutes } from './modules/company/company.routes'
 import { orderRoutes } from './modules/order/order.routes'
 import { notificationRoutes } from './modules/notification/notification.routes'
 import { webhookRoutes } from './modules/webhook/webhook.routes'
+import { adminRoutes } from './modules/admin/admin.routes'
 
 const app = express()
 
@@ -58,6 +59,7 @@ app.use(`${config.api.prefix}/auth`, authRoutes);
 app.use(`${config.api.prefix}/companies`, companyRoutes);
 app.use(`${config.api.prefix}/orders`, orderRoutes);
 app.use(`${config.api.prefix}/notifications`, notificationRoutes);
+app.use(`${config.api.prefix}/admin`, adminRoutes);
 
 // error handlers
 app.use(notFoundHandler)
