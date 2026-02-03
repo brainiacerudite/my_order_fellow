@@ -4,7 +4,7 @@ import { notificationController } from "./notification.controller";
 
 const router = Router()
 
-router.use(authenticate)
+router.use(authenticate())
 
 router.get("/", notificationController.getLogs)
 

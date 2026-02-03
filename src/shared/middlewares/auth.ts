@@ -87,6 +87,8 @@ export const passwordResetToken = (req: Request, _res: Response, next: NextFunct
 
         // attach to req
         req.authPayload = decoded;
+
+        next()
     } catch (error) {
         return next(createError('Invalid or expired reset token.', 401));
     }

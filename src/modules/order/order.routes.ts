@@ -6,7 +6,7 @@ import { validate, validateObjectId } from "../../shared/middlewares/validation"
 
 const router = Router()
 
-router.use(authenticate)
+router.use(authenticate())
 router.use(emailVerified)
 
 router.post("/", validate(createOrderSchema), orderController.createOrder)

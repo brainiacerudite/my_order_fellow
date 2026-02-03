@@ -6,7 +6,7 @@ import { submitKycSchema } from "./company.validation";
 
 const router = Router()
 
-router.use(authenticate)
+router.use(authenticate())
 
 router.get("/profile", companyController.getCompanyProfile);
 router.post("/kyc/submit", emailVerified, validate(submitKycSchema), companyController.submitKyc);
