@@ -6,7 +6,7 @@ export const orderCreatedPayload = z.object({
     data: z.object({
         external_order_id: z.string(),
         customer_email: z.email(),
-        customer_phonse: z.string().optional(),
+        customer_phone: z.string().optional(),
         delivery_address: z.string(),
         item_summary: z.any(),
         initial_status: z.enum(OrderStatus).default(OrderStatus.PENDING),

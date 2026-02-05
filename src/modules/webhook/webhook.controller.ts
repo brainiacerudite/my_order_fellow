@@ -59,7 +59,7 @@ const handleIncomingWebhook = async (req: Request, res: Response) => {
             await orderService.createOrder(company.id, {
                 externalOrderId: data.external_order_id,
                 customerEmail: data.customer_email,
-                customerPhone: data.customer_phonse,
+                customerPhone: data.customer_phone,
                 deliveryAddress: data.delivery_address,
                 itemSummary: data.item_summary,
                 isSubscriptionActive: true

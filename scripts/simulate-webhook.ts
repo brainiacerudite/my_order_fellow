@@ -21,7 +21,7 @@ async function run() {
             data: {
                 external_order_id: EXTERNAL_ORDER_ID,
                 customer_email: "test@example.com",
-                customer_phonse: "123-456-7890",
+                customer_phone: "123-456-7890",
                 delivery_address: "123 Tech Street",
                 item_summary: [{ name: "Test Item", quantity: 1 }],
             }
