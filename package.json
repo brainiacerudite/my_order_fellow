@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "start": "node dist/src/index.js",
-    "build": "tsc && cp -r src/shared/templates dist/src/shared/templates",
+    "build": "npx prisma generate && tsc && mkdir -p dist/src/shared/templates && cp -r src/shared/templates/* dist/src/shared/templates/",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:unit": "jest tests/unit",
