@@ -119,7 +119,20 @@ npm test
 
 ## 📚 API Documentation
 
-You can import the `postman_collection.json` into Postman.
+The API documentation for this project is available in two formats:
+
+1. **Postman Collection**: You can import the Postman collection file directly into your Postman application to test and explore the API endpoints interactively.
+
+2. **Online Documentation**: Access the complete API documentation through the Postman web viewer at the URL provided below. This includes detailed information about:
+   - Available endpoints
+   - Request parameters
+   - Response formats
+   - Authentication requirements
+   - Example requests and responses
+
+**Documentation URL**: https://documenter.getpostman.com/view/39386408/2sBXc8nhfX
+
+---
 
 ### Key Endpoints
 
