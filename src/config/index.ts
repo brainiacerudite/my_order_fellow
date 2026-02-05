@@ -31,6 +31,9 @@ const envSchema = z.object({
     OTP_EXPIRY_MINUTES: z.coerce.number().default(10),
 
     // Email Service
+    EMAIL_PROVIDER: z.enum(['smtp', 'sendgrid']).default('smtp'),
+    EMAIL_API_KEY: z.string().default(''), // For providers like SendGrid
+
     EMAIL_HOST: z.string().default('smtp.example.com'),
     EMAIL_PORT: z.coerce.number().default(587),
     EMAIL_USER: z.string().default('user@example.com'),
@@ -97,6 +100,9 @@ export const config = {
 
     // Email Service
     email: {
+        provider: env.data.EMAIL_PROVIDER,
+        apiKey: env.data.EMAIL_API_KEY,
+
         host: env.data.EMAIL_HOST,
         port: env.data.EMAIL_PORT,
         user: env.data.EMAIL_USER,
